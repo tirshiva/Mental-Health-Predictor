@@ -172,10 +172,10 @@ Pipeline Execution Summary:
 - Total Duration: {duration}
 
 Pipeline Steps Completed:
-1. ✅ Data Cleaning and Preprocessing
-2. ✅ Exploratory Data Analysis
-3. ✅ Model Training and Evaluation
-4. ✅ Model Explainability (SHAP)
+1. [OK] Data Cleaning and Preprocessing
+2. [OK] Exploratory Data Analysis
+3. [OK] Model Training and Evaluation
+4. [OK] Model Explainability (SHAP)
 
 Output Files Generated:
 - Cleaned Data: data/processed/cleaned_data.csv
