@@ -1,0 +1,186 @@
+# Mental Health Risk Prediction Configuration
+
+# Data Configuration
+data:
+  raw_data_path: "data/raw_data/survey.csv"
+  processed_data_path: "data/processed/cleaned_data.csv"
+  test_size: 0.2
+  random_state: 42
+
+# Model Configuration
+models:
+  algorithms:
+    - name: "logistic_regression"
+      class: "LogisticRegression"
+      params:
+        C: [0.1, 1, 10, 100]
+        penalty: ["l1", "l2"]
+        solver: ["liblinear", "saga"]
+        max_iter: 1000
+        random_state: 42
+    
+    - name: "random_forest"
+      class: "RandomForestClassifier"
+      params:
+        n_estimators: [50, 100, 200]
+        max_depth: [5, 10, 15, null]
+        min_samples_split: [2, 5, 10]
+        min_samples_leaf: [1, 2, 4]
+        random_state: 42
+    
+    - name: "xgboost"
+      class: "XGBClassifier"
+      params:
+        n_estimators: [50, 100, 200]
+        max_depth: [3, 5, 7]
+        learning_rate: [0.01, 0.1, 0.2]
+        subsample: [0.8, 0.9, 1.0]
+        eval_metric: "logloss"
+        random_state: 42
+
+# Training Configuration
+training:
+  cv_folds: 5
+  scoring: "f1"
+  n_jobs: -1
+  verbose: 1
+
+# Feature Engineering
+features:
+  engineered_features:
+    - "is_remote_worker"
+    - "work_stress_level"
+    - "company_size_category"
+    - "mental_health_support_score"
+  
+  categorical_mappings:
+    gender:
+      Male: 0
+      Female: 1
+      Other: 2
+    
+    work_interfere:
+      Never: 0
+      Rarely: 1
+      Sometimes: 2
+      Often: 3
+    
+    company_size:
+      "1-5": 1
+      "6-25": 2
+      "26-100": 3
+      "100-500": 4
+      "500-1000": 5
+      "More than 1000": 6
+
+# Target Variable Configuration
+target:
+  name: "mental_health_risk"
+  high_risk_conditions:
+    - "treatment == 'Yes'"
+    - "work_interfere == 'Often'"
+    - "mental_health_consequence == 'Yes'"
+    - "family_history == 'Yes' and work_interfere in ['Sometimes', 'Often']"
+
+# Data Cleaning Configuration
+cleaning:
+  age:
+    min_age: 15
+    max_age: 80
+  
+  missing_values:
+    categorical_strategy: "most_frequent"
+    numerical_strategy: "median"
+  
+  outliers:
+    remove_age_outliers: true
+    iqr_multiplier: 1.5
+
+# EDA Configuration
+eda:
+  output_dir: "outputs/eda"
+  plots:
+    - "target_distribution"
+    - "age_analysis"
+    - "gender_analysis"
+    - "work_analysis"
+    - "correlation_heatmap"
+    - "feature_importance"
+    - "interactive_dashboard"
+  
+  figure_size: [12, 8]
+  dpi: 300
+
+# SHAP Configuration
+shap:
+  output_dir: "outputs/shap"
+  max_display: 20
+  num_samples: 10
+  top_features: 5
+
+# Web Application Configuration
+app:
+  title: "Mental Health Risk Predictor"
+  page_icon: "🧠"
+  layout: "wide"
+  port: 8501
+  
+  styling:
+    primary_color: "#1f77b4"
+    secondary_color: "#ff7f0e"
+    success_color: "#4ecdc4"
+    warning_color: "#ff6b6b"
+
+# Output Configuration
+outputs:
+  models_dir: "models"
+  reports_dir: "outputs"
+  logs_dir: "logs"
+  
+  save_models: true
+  save_reports: true
+  save_visualizations: true
+
+# Logging Configuration
+logging:
+  level: "INFO"
+  format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+  file: "pipeline.log"
+
+# Deployment Configuration
+deployment:
+  streamlit:
+    host: "0.0.0.0"
+    port: 8501
+    enable_cors: true
+    enable_xsrf_protection: true
+  
+  docker:
+    base_image: "python:3.9-slim"
+    expose_port: 8501
+    requirements_file: "requirements.txt"
+
+# Testing Configuration
+testing:
+  test_size: 0.2
+  random_state: 42
+  cv_folds: 5
+  
+  metrics:
+    - "accuracy"
+    - "precision"
+    - "recall"
+    - "f1_score"
+    - "roc_auc"
+
+# CI/CD Configuration
+ci_cd:
+  python_versions: ["3.8", "3.9", "3.10"]
+  test_coverage: true
+  code_quality:
+    black: true
+    flake8: true
+    mypy: false
+  
+  security_scan: true
+  documentation_build: true 
